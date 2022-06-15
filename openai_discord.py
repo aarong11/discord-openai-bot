@@ -97,19 +97,10 @@ async def on_message(message):
     # fantasies don't play out in some public channel. Not that people would use this bot for anything perverse
     # they wouldnt share publicly. I totally didnt build this for that exact purpose. 
     prompt_handler: PromptHandler
-    if len(global_contexts) != 0:
-        for context in global_contexts:
-            if context.whisperword_user == user_name and context.whisperword_channel == ctx.channel.id:
-                prompt_handler = context
-                logging.info(f"on_message: using existing context for {user_name} in channel {ctx.channel.id}")             
-        if prompt_handler == None:
-            global_contexts.append(PromptHandler(user_name, bot_name, ctx.channel.id, MAX_CONVERSATION_HISTORY))
-            prompt_handler = global_contexts[len(global_contexts)-1]
-            logging.warning(f"on_message: created new context for {user_name} in channel {ctx.channel.id}")        
-    else:
-        global_contexts.append(PromptHandler(user_name, bot_name, ctx.channel.id, MAX_CONVERSATION_HISTORY))
-        prompt_handler = global_contexts[len(global_contexts)-1]
-        logging.warning(f"on_message: created new context for {user_name} in channel {ctx.channel.id}")
+
+    global_contexts.append(PromptHandler(user_name, bot_name, ctx.channel.id, MAX_CONVERSATION_HISTORY))
+    prompt_handler = global_contexts[len(global_contexts)-1]
+    logging.warning(f"on_message: created new context for {user_name} in channel {ctx.channel.id}")
 
     # Handle .commands
     if content.startswith(".context"):
